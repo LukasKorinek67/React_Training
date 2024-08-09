@@ -1,0 +1,23 @@
+.App {
+  text-align: left;
+  padding: 40px;
+}
+
+.App h1 {
+  margin-bottom: 30px;
+}
+
+.recipe-card {
+  padding: 30px;
+  margin: 5px;
+  width: 20rem;
+}
+
+.card-title {
+  padding-bottom: 5px;
+  border-bottom: var(--bs-info) solid;
+}
+
+.recipe-card svg {
+  margin-right: 10px;
+}
