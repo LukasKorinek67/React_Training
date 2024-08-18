@@ -21,7 +21,7 @@ export default function RecipesList() {
         <>
             <Row className="g-4">
                 {recipes && recipes.map((recipe) => (
-                    <Col key={recipe.name}>
+                    <Col key={recipe.id}>
                         <Recipe recipe={recipe} />
                     </Col>
                 ))}
