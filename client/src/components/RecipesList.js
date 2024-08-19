@@ -1,5 +1,4 @@
 import {useState, useEffect, useMemo} from 'react';
-import recipesData from '../mockup-data/recipes.json';
 import Navbar from "react-bootstrap/Navbar";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
@@ -7,35 +6,58 @@ import Form from "react-bootstrap/Form";
 import RecipesBigGrid from "./RecipesBigGrid";
 import RecipesSmallGrid from "./RecipesSmallGrid";
 import RecipesTableList from "./RecipesTableList";
+import requestHandler from '../services/RequestHandler';
 
 import Icon from '@mdi/react';
-import { mdiGridLarge, mdiGrid, mdiTable } from '@mdi/js';
+import {mdiGridLarge, mdiGrid, mdiTable, mdiLoading} from '@mdi/js';
 
 
 export default function RecipesList() {
-    const [recipes, setRecipes] = useState(null);
+    const [recipesLoadCall, setRecipesLoadCall] = useState({
+        state: "pending",
+    });
+    const [ingredientsLoadCall, setIngredientsLoadCall] = useState({
+        state: "pending",
+    });
     const [viewType, setViewType] = useState('big-detail');
     const [searchBy, setSearchBy] = useState("");
 
     useEffect(() => {
         getAllRecipes();
+        getAllIngredients();
     }, []);
 
     const filteredRecipes = useMemo(() => {
-        if (recipes != null) {
-            return recipes.filter((recipe) => {
+        if (recipesLoadCall.data != null) {
+            return recipesLoadCall.data.filter((recipe) => {
                 return (
                     recipe.name.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase()) ||
                     recipe.description.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase())
                 );
             });
         }
-    }, [searchBy, recipes]);
+    }, [searchBy, recipesLoadCall.data]);
 
     function getAllRecipes() {
-        // tady by bylo volání na backend
+        requestHandler.getAllRecipes()
+        .then(async (response) => {
+            if (response.status >= 400) {
+                setRecipesLoadCall({ state: "error", error: response.data });
+            } else {
+                setRecipesLoadCall({ state: "success", data: response.data });
+            }
+        });
+    }
 
-        setRecipes(recipesData);
+    function getAllIngredients() {
+        requestHandler.getAllIngredients()
+        .then(async (response) => {
+            if (response.status >= 400) {
+                setIngredientsLoadCall({ state: "error", error: response.data });
+            } else {
+                setIngredientsLoadCall({ state: "success", data: response.data });
+            }
+        });
     }
 
     const viewTypes = [
@@ -46,6 +68,34 @@ export default function RecipesList() {
 
     function handleSearchChange(event) {
         setSearchBy(event.target.value);
+    }
+
+    function showRecipes() {
+        if (recipesLoadCall.state === "success" && ingredientsLoadCall.state === "success") {
+            switch(viewType) {
+                case "big-detail":
+                    return <RecipesBigGrid recipes={filteredRecipes}/>;
+                case "small-detail":
+                    return <RecipesSmallGrid recipes={filteredRecipes} ingredients={ingredientsLoadCall.data}/>;
+                case "table":
+                    return <RecipesTableList recipes={filteredRecipes} />;
+                default:
+                    return null;
+            }
+        } else if (recipesLoadCall.state === "error" || ingredientsLoadCall.state === "error") {
+            return (
+                <div className="request_error">
+                    <h1>Nepodařilo se načíst data ze serveru.</h1>
+                    <pre>{JSON.stringify(ingredientsLoadCall.error, null, 2)}</pre>
+                </div>
+            );
+        } else if (recipesLoadCall.state === "pending" || ingredientsLoadCall.state === "pending") {
+            return (
+                <div className="loading_icon">
+                    <Icon size={2} path={mdiLoading} spin={true} />
+                </div>
+            );
+        }
     }
 
     return (
@@ -80,9 +130,7 @@ export default function RecipesList() {
                 </ButtonGroup>
             </Navbar>
 
-            {viewType === 'big-detail' && <RecipesBigGrid recipes={filteredRecipes}/>}
-            {viewType === 'small-detail' && <RecipesSmallGrid recipes={filteredRecipes}/>}
-            {viewType === 'table' && <RecipesTableList recipes={filteredRecipes} />}
+            {showRecipes()}
         </>
     );
 }

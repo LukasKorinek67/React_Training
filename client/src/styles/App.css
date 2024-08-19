@@ -18,3 +18,16 @@
 .recipe-card svg {
   margin-right: 10px;
 }
+
+.loading_icon {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.request_error {
+  margin-left: 80px;
+  margin-top: 80px;
+}
