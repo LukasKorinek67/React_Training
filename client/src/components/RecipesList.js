@@ -50,8 +50,8 @@ export default function RecipesList() {
 
     return (
         <>
-            <Navbar bg="light" >
-                <Navbar.Brand className="ps-4 mt-1">Seznam receptů</Navbar.Brand>
+            <Navbar bg="dark" >
+                <Navbar.Brand className="ps-4 mt-1 text-light font-weight-bold">Seznam receptů</Navbar.Brand>
                 <Form className="d-flex ms-auto me-4 pt-0">
                     <Form.Control
                         id="searchInput"

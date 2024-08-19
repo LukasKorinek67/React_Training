@@ -4,6 +4,12 @@
   width: 20rem;
 }
 
+.small-grid {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .card-title {
   padding-bottom: 5px;
   border-bottom: var(--bs-info) solid;
