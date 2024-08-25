@@ -1,18 +1,15 @@
-import {useState, useEffect, useMemo} from 'react';
-import Navbar from "react-bootstrap/Navbar";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import ToggleButton from "react-bootstrap/ToggleButton";
-import Form from "react-bootstrap/Form";
-import RecipesBigGrid from "./RecipesBigGrid";
-import RecipesSmallGrid from "./RecipesSmallGrid";
-import RecipesTableList from "./RecipesTableList";
+import React, {useState, useEffect, useMemo} from 'react';
+import RecipesBigGrid from "../components/RecipesBigGrid";
+import RecipesSmallGrid from "../components/RecipesSmallGrid";
+import RecipesTableList from "../components/RecipesTableList";
 import requestHandler from '../services/RequestHandler';
-
+import MainNavbar from "../components/MainNavbar";
 import Icon from '@mdi/react';
 import {mdiGridLarge, mdiGrid, mdiTable, mdiLoading} from '@mdi/js';
+import * as strings from "../text/strings";
 
 
-export default function RecipesList() {
+export default function RecipeList() {
     const [recipesLoadCall, setRecipesLoadCall] = useState({
         state: "pending",
     });
@@ -66,8 +63,8 @@ export default function RecipesList() {
         { name: 'Tabulka', value: 'table', icon: mdiTable },
     ];
 
-    function handleSearchChange(event) {
-        setSearchBy(event.target.value);
+    function handleSearchChange(searchValue) {
+        setSearchBy(searchValue);
     }
 
     function showRecipes() {
@@ -100,36 +97,12 @@ export default function RecipesList() {
 
     return (
         <>
-            <Navbar bg="dark" >
-                <Navbar.Brand className="ps-4 mt-1 text-light font-weight-bold">Seznam receptů</Navbar.Brand>
-                <Form className="d-flex ms-auto me-4 pt-0">
-                    <Form.Control
-                        id="searchInput"
-                        type="search"
-                        placeholder="Hledat"
-                        className="me-1"
-                        aria-label="Search"
-                        onChange={handleSearchChange}
-                    />
-                </Form>
-                <ButtonGroup className="pe-4">
-                    {viewTypes.map((type) => (
-                        <ToggleButton
-                            key={type.value}
-                            id={`type-${type.value}`}
-                            type="radio"
-                            variant='outline-info'
-                            name="type"
-                            value={type.value}
-                            checked={viewType === type.value}
-                            onChange={(e) => setViewType(e.currentTarget.value)}
-                        >
-                            <Icon path={type.icon} size={1} />
-                        </ToggleButton>
-                    ))}
-                </ButtonGroup>
-            </Navbar>
-
+            <MainNavbar hasSearchForm={true}
+                        handleSearchChange={handleSearchChange}
+                        hasGridToggle={true}
+                        gridViewTypes={viewTypes}
+                        gridChange={setViewType}
+                        actualViewType={viewType}/>
             {showRecipes()}
         </>
     );

@@ -1,12 +1,14 @@
 import React from 'react';
+import { Outlet } from "react-router-dom";
 import './styles/App.css';
-import RecipesList from "./components/RecipesList";
+import Footer from "./components/Footer";
 
 function App() {
 
     return (
         <>
-            <RecipesList />
+            <Outlet />
+            <Footer />
         </>
     );
 }
