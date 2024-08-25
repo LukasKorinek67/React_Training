@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import Icon from "@mdi/react";
+import { mdiBookOpenVariantOutline } from '@mdi/js';
 import { NavLink } from "react-router-dom";
 import * as strings from "../text/strings";
 
@@ -26,7 +27,10 @@ export default function MainNavbar({hasSearchForm, handleSearchChange, hasGridTo
     return (
         <>
         <Navbar bg="dark" data-bs-theme="dark">
-            <Navbar.Brand className="ps-4 font-weight-bold">{getBrandText()}</Navbar.Brand>
+            <Navbar.Brand className="ps-4 font-weight-bold">
+                <Icon path={mdiBookOpenVariantOutline} size={1.5} className="me-3 pb-1" color="var(--bs-info)"/>
+                {getBrandText()}
+            </Navbar.Brand>
             <Nav className="me-auto">
                 <Nav.Link as={NavLink} to="/recipeList">{strings.RECIPES}</Nav.Link>
                 <Nav.Link as={NavLink} to="/ingredientList">{strings.INGREDIENTS}</Nav.Link>

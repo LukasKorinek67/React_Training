@@ -82,7 +82,7 @@ export default function RecipeList() {
         } else if (recipesLoadCall.state === "error" || ingredientsLoadCall.state === "error") {
             return (
                 <div className="request_error">
-                    <h1>Nepodařilo se načíst data ze serveru.</h1>
+                    <h1>{strings.ERROR_LOAD_DATA}</h1>
                     <pre>{JSON.stringify(ingredientsLoadCall.error, null, 2)}</pre>
                 </div>
             );
