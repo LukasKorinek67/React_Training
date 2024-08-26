@@ -1,21 +1,16 @@
 import MainNavbar from "../components/MainNavbar";
-import React, {useEffect, useMemo, useState} from "react";
-import requestHandler from "../services/RequestHandler";
+import React, {useMemo, useState} from "react";
 import Icon from "@mdi/react";
 import {mdiFoodVariant, mdiLoading} from "@mdi/js";
 import ListGroup from 'react-bootstrap/ListGroup';
 import * as strings from "../text/strings";
+import {useData} from "../context/DataProvider";
 
 
 export default function IngredientList() {
-    const [ingredientsLoadCall, setIngredientsLoadCall] = useState({
-        state: "pending",
-    });
     const [searchBy, setSearchBy] = useState("");
+    const { ingredientsLoadCall } = useData();
 
-    useEffect(() => {
-        getAllIngredients();
-    }, []);
 
     const filteredIngredients = useMemo(() => {
         if (ingredientsLoadCall.data != null) {
@@ -24,17 +19,6 @@ export default function IngredientList() {
             });
         }
     }, [searchBy, ingredientsLoadCall.data]);
-
-    function getAllIngredients() {
-        requestHandler.getAllIngredients()
-            .then(async (response) => {
-                if (response.status >= 400) {
-                    setIngredientsLoadCall({ state: "error", error: response.data });
-                } else {
-                    setIngredientsLoadCall({ state: "success", data: response.data });
-                }
-            });
-    }
 
     function handleSearch(searchValue) {
         setSearchBy(searchValue);

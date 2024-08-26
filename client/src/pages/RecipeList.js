@@ -1,28 +1,19 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useMemo} from 'react';
 import RecipesBigGrid from "../components/RecipesBigGrid";
 import RecipesSmallGrid from "../components/RecipesSmallGrid";
 import RecipesTableList from "../components/RecipesTableList";
-import requestHandler from '../services/RequestHandler';
 import MainNavbar from "../components/MainNavbar";
 import Icon from '@mdi/react';
 import {mdiGridLarge, mdiGrid, mdiTable, mdiLoading} from '@mdi/js';
 import * as strings from "../text/strings";
+import {useData} from "../context/DataProvider";
 
 
 export default function RecipeList() {
-    const [recipesLoadCall, setRecipesLoadCall] = useState({
-        state: "pending",
-    });
-    const [ingredientsLoadCall, setIngredientsLoadCall] = useState({
-        state: "pending",
-    });
     const [viewType, setViewType] = useState('big-detail');
     const [searchBy, setSearchBy] = useState("");
+    const { recipesLoadCall, ingredientsLoadCall } = useData();
 
-    useEffect(() => {
-        getAllRecipes();
-        getAllIngredients();
-    }, []);
 
     const filteredRecipes = useMemo(() => {
         if (recipesLoadCall.data != null) {
@@ -34,28 +25,6 @@ export default function RecipeList() {
             });
         }
     }, [searchBy, recipesLoadCall.data]);
-
-    function getAllRecipes() {
-        requestHandler.getAllRecipes()
-        .then(async (response) => {
-            if (response.status >= 400) {
-                setRecipesLoadCall({ state: "error", error: response.data });
-            } else {
-                setRecipesLoadCall({ state: "success", data: response.data });
-            }
-        });
-    }
-
-    function getAllIngredients() {
-        requestHandler.getAllIngredients()
-        .then(async (response) => {
-            if (response.status >= 400) {
-                setIngredientsLoadCall({ state: "error", error: response.data });
-            } else {
-                setIngredientsLoadCall({ state: "success", data: response.data });
-            }
-        });
-    }
 
     const viewTypes = [
         { name: 'Velký detail', value: 'big-detail', icon: mdiGridLarge },

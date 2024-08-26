@@ -2,13 +2,16 @@ import React from 'react';
 import { Outlet } from "react-router-dom";
 import './styles/App.css';
 import Footer from "./components/Footer";
+import {DataProvider} from "./context/DataProvider";
 
 function App() {
 
     return (
         <>
-            <Outlet />
-            <Footer />
+            <DataProvider>
+                <Outlet />
+                <Footer />
+            </DataProvider>
         </>
     );
 }
