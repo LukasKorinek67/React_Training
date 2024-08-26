@@ -17,8 +17,12 @@ class RequestHandler {
     }
 
     addNewRecipe(recipe) {
-        //const endPoint = "recipe/create";
-        console.log(recipe);
+        const endPoint = "/recipe/create";
+        return axios.post(this.url + endPoint, recipe, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
     }
 }
 const requestHandler = new RequestHandler();

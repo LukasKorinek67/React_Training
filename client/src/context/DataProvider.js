@@ -39,8 +39,13 @@ export function DataProvider({ children }) {
             });
     }
 
+    const reloadData = () => {
+        getAllRecipes();
+        getAllIngredients();
+    }
+
     return (
-        <DataContext.Provider value={{ recipesLoadCall, ingredientsLoadCall }}>
+        <DataContext.Provider value={{ recipesLoadCall, ingredientsLoadCall, reloadData }}>
             {children}
         </DataContext.Provider>
     );

@@ -6,14 +6,14 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Icon from "@mdi/react";
-import {mdiPlus, mdiClose} from "@mdi/js";
+import {mdiPlus, mdiClose, mdiLoading} from "@mdi/js";
 import * as strings from "../text/strings";
 import {useData} from "../context/DataProvider";
 import requestHandler from "../services/RequestHandler";
 import { v4 as uuidv4 } from 'uuid';
 
 
-export default function CreateRecipeModal({show, handleClose}) {
+export default function CreateRecipeModal({show, handleClose, onComplete}) {
     const [recipeData, setRecipeData] = useState({
         name: "",
         description: "",
@@ -21,6 +21,7 @@ export default function CreateRecipeModal({show, handleClose}) {
     });
     const [ingredients, setIngredients] = useState([]);
     const [validated, setValidated] = useState(false);
+    const [addRecipeCall, setAddRecipeCall] = useState({ state: "inactive" })
     const {ingredientsLoadCall} = useData();
 
     const setRecipeField = (fieldName, fieldValue) => {
@@ -32,11 +33,12 @@ export default function CreateRecipeModal({show, handleClose}) {
     };
 
     const addIngredient = () => {
+        const sortedData = ingredientsLoadCall.data.sort((a, b) => a.name.localeCompare(b.name));
         setIngredients([...ingredients, {
             list_uuid: uuidv4(),
-            id: ingredientsLoadCall.data[ingredients.length].id,
-            name: ingredientsLoadCall.data[ingredients.length].name,
-            amount: '',
+            id: sortedData[ingredients.length].id,
+            name: sortedData[ingredients.length].name,
+            amount: null,
             unit: '' }]);
     };
 
@@ -58,9 +60,19 @@ export default function CreateRecipeModal({show, handleClose}) {
 
     const updateIngredient = (index, amount, unit) => {
         const newIngredients = [...ingredients];
-        newIngredients[index].amount = amount;
+        newIngredients[index].amount = parseFloat(amount);
         newIngredients[index].unit = unit;
         setIngredients(newIngredients);
+    }
+
+    const resetModal = () => {
+        setRecipeData({
+            name: "",
+            description: "",
+            imgUri: ""
+        });
+        setIngredients([]);
+        setValidated(false);
     }
 
     const handleSubmit = async (e) => {
@@ -76,16 +88,21 @@ export default function CreateRecipeModal({show, handleClose}) {
             setValidated(true);
             return;
         }
+        setAddRecipeCall({ state: "pending" });
         requestHandler.addNewRecipe(recipe)
-        /*.then(async (response) => {
+        .then(async (response) => {
             console.log(response)
             if (response.status >= 400) {
                 //error
+                setAddRecipeCall({ state: "error", error: response.data});
             } else {
                 //success
+                setAddRecipeCall({ state: "success", data: response.data });
+                onComplete();
+                handleClose();
+                resetModal()
             }
-        });*/
-        //handleClose();
+        });
     };
 
     return (
@@ -157,7 +174,9 @@ export default function CreateRecipeModal({show, handleClose}) {
                                                 required
                                             >
                                                 {ingredientsLoadCall.state === "success" &&
-                                                    ingredientsLoadCall.data.map((ingredient) => (
+                                                    ingredientsLoadCall.data
+                                                        .sort((a, b) => a.name.localeCompare(b.name))
+                                                        .map((ingredient) => (
                                                         <option key={ingredient.id}>{ingredient.name}</option>
                                                         ))}
                                             </Form.Select>
@@ -199,14 +218,20 @@ export default function CreateRecipeModal({show, handleClose}) {
                                 {strings.MODAL_INGREDIENTS_ADD}
                             </Button>
                         </Form.Group>
+                        { addRecipeCall.state === "error" &&
+                            <Form.Text className="text-center text-danger fw-semibold">Error: {addRecipeCall.error.errorMessage}</Form.Text>
+                        }
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="outline-secondary" onClick={handleClose}>
                             <Icon size={0.8} path={mdiClose} className="me-1 pb-1"/>
                             {strings.MODAL_BUTTON_CANCEL}
                         </Button>
-                        <Button variant="outline-info" type="submit">
-                            <Icon size={0.8} path={mdiPlus} className="me-1 pb-1"/>
+                        <Button variant="outline-info" type="submit" disabled={addRecipeCall.state === "pending"}>
+                            { addRecipeCall.state === "pending" ?
+                                (<Icon size={0.8} path={mdiLoading} spin={true} className="me-1 pb-1" />) :
+                                (<Icon size={0.8} path={mdiPlus} className="me-1 pb-1" />)
+                            }
                             {strings.MODAL_BUTTON_CREATE}
                         </Button>
                     </Modal.Footer>

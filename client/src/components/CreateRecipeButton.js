@@ -4,15 +4,15 @@ import {mdiPlus} from "@mdi/js";
 import * as strings from "../text/strings";
 import {Button} from "react-bootstrap";
 import CreateRecipeModal from "../modals/CreateRecipeModal";
+import {useData} from "../context/DataProvider";
 
 
 export default function CreateRecipeButton() {
     const [showModal, setShowModal] = useState(false);
+    const { reloadData } = useData();
 
     const show = () => setShowModal(true);
     const close = () => setShowModal(false);
-
-
 
     return (
         <>
@@ -22,7 +22,7 @@ export default function CreateRecipeButton() {
                     {strings.CREATE_RECIPE}
                 </Button>
             </div>
-            <CreateRecipeModal show={showModal} handleClose={close}/>
+            <CreateRecipeModal show={showModal} handleClose={close} onComplete={reloadData}/>
         </>
     );
 }
