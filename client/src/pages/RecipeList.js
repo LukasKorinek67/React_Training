@@ -3,6 +3,7 @@ import RecipesBigGrid from "../components/RecipesBigGrid";
 import RecipesSmallGrid from "../components/RecipesSmallGrid";
 import RecipesTableList from "../components/RecipesTableList";
 import MainNavbar from "../components/MainNavbar";
+import CreateRecipeButton from "../components/CreateRecipeButton";
 import Icon from '@mdi/react';
 import {mdiGridLarge, mdiGrid, mdiTable, mdiLoading} from '@mdi/js';
 import * as strings from "../text/strings";
@@ -72,6 +73,7 @@ export default function RecipeList() {
                         gridViewTypes={viewTypes}
                         gridChange={setViewType}
                         actualViewType={viewType}/>
+            <CreateRecipeButton />
             {showRecipes()}
         </>
     );

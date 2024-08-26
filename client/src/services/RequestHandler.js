@@ -15,6 +15,11 @@ class RequestHandler {
         const endPoint = "/ingredient/list";
         return axios.get(this.url + endPoint);
     }
+
+    addNewRecipe(recipe) {
+        //const endPoint = "recipe/create";
+        console.log(recipe);
+    }
 }
 const requestHandler = new RequestHandler();
 export default requestHandler;
