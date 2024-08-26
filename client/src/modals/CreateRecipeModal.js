@@ -11,6 +11,7 @@ import * as strings from "../text/strings";
 import {useData} from "../context/DataProvider";
 import requestHandler from "../services/RequestHandler";
 import { v4 as uuidv4 } from 'uuid';
+import Editor from 'react-simple-wysiwyg';
 
 
 export default function CreateRecipeModal({show, handleClose}) {
@@ -93,6 +94,7 @@ export default function CreateRecipeModal({show, handleClose}) {
                         <Form.Group className="mb-3">
                             <Form.Label>{strings.MODAL_RECIPE_NAME}</Form.Label>
                             <Form.Control
+                                value={recipeData.name}
                                 type="text"
                                 as="input"
                                 placeholder={strings.MODAL_RECIPE_NAME_PLACEHOLDER}
@@ -101,12 +103,10 @@ export default function CreateRecipeModal({show, handleClose}) {
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>{strings.MODAL_PROCESS}</Form.Label>
-                            <Form.Control
-                                type="text"
-                                as="textarea"
-                                rows={4}
-                                placeholder={strings.MODAL_PROCESS_PLACEHOLDER}
+                            <Editor
+                                value={recipeData.description}
                                 onChange={(e) => setRecipeField("description", e.target.value)}
+                                placeholder={strings.MODAL_PROCESS_PLACEHOLDER}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
