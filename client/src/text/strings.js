@@ -18,6 +18,10 @@ export const MODAL_INGREDIENTS = "Ingredience";
 export const MODAL_INGREDIENTS_ADD = "Přidat ingredienci";
 export const MODAL_INGREDIENTS_AMOUNT = "Počet";
 export const MODAL_INGREDIENTS_UNIT = "Jednotka";
+export const MODAL_VALIDATION_RECIPE_NAME = "Název receptu je povinný!";
+export const MODAL_VALIDATION_INGREDIENT_NAME = "Je třeba vybrat název ingredience!";
+export const MODAL_VALIDATION_INGREDIENT_AMOUNT = "Povinný údaj! Větší než 0, menší než 1 000 000!";
+export const MODAL_VALIDATION_INGREDIENT_UNIT = "Jednotka je povinná!";
 export const MODAL_BUTTON_CREATE = "Vytvořit";
 export const MODAL_BUTTON_CANCEL = "Zrušit";
 

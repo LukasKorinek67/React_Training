@@ -21,6 +21,7 @@ export default function CreateRecipeModal({show, handleClose}) {
         imgUri: ""
     });
     const [ingredients, setIngredients] = useState([]);
+    const [validated, setValidated] = useState(false);
     const {ingredientsLoadCall} = useData();
 
     const setRecipeField = (fieldName, fieldValue) => {
@@ -64,6 +65,7 @@ export default function CreateRecipeModal({show, handleClose}) {
     }
 
     const handleSubmit = async (e) => {
+        const form = e.currentTarget;
         e.preventDefault();
         e.stopPropagation();
 
@@ -71,6 +73,10 @@ export default function CreateRecipeModal({show, handleClose}) {
             ...recipeData,
             "ingredients": ingredients.map(({ list_uuid, name, ...rest }) => rest)
         };
+        if (!form.checkValidity()) {
+            setValidated(true);
+            return;
+        }
         requestHandler.addNewRecipe(recipe)
         /*.then(async (response) => {
             console.log(response)
@@ -86,7 +92,7 @@ export default function CreateRecipeModal({show, handleClose}) {
     return (
         <>
             <Modal show={show} onHide={handleClose} centered size="lg">
-                <Form onSubmit={(e) => handleSubmit(e)}>
+                <Form noValidate validated={validated} onSubmit={(e) => handleSubmit(e)}>
                     <Modal.Header closeButton>
                         <Modal.Title>{strings.CREATE_RECIPE}</Modal.Title>
                     </Modal.Header>
@@ -99,7 +105,9 @@ export default function CreateRecipeModal({show, handleClose}) {
                                 as="input"
                                 placeholder={strings.MODAL_RECIPE_NAME_PLACEHOLDER}
                                 onChange={(e) => setRecipeField("name", e.target.value)}
+                                required
                             />
+                            <Form.Control.Feedback type="invalid">{strings.MODAL_VALIDATION_RECIPE_NAME}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>{strings.MODAL_PROCESS}</Form.Label>
@@ -130,12 +138,14 @@ export default function CreateRecipeModal({show, handleClose}) {
                                             <Form.Select
                                                 value={ingredient.name}
                                                 onChange={(e) => updateIngredientName(index, e.target.value)}
+                                                required
                                             >
                                                 {ingredientsLoadCall.state === "success" &&
                                                     ingredientsLoadCall.data.map((ingredient) => (
                                                         <option key={ingredient.id}>{ingredient.name}</option>
                                                         ))}
                                             </Form.Select>
+                                            <Form.Control.Feedback type="invalid">{strings.MODAL_VALIDATION_INGREDIENT_NAME}</Form.Control.Feedback>
                                         </Col>
                                         <Col xs={2} className="pe-0">
                                             <Form.Control
@@ -143,7 +153,11 @@ export default function CreateRecipeModal({show, handleClose}) {
                                                 as="input"
                                                 value={ingredient.amount}
                                                 onChange={(e) => updateIngredient(index, e.target.value, ingredient.unit)}
+                                                required
+                                                min={0}
+                                                max={999999}
                                             />
+                                            <Form.Control.Feedback type="invalid">{strings.MODAL_VALIDATION_INGREDIENT_AMOUNT}</Form.Control.Feedback>
                                         </Col>
                                         <Col xs={2} className="pe-0">
                                             <Form.Control
@@ -151,7 +165,10 @@ export default function CreateRecipeModal({show, handleClose}) {
                                                 as="input"
                                                 value={ingredient.unit}
                                                 onChange={(e) => updateIngredient(index, ingredient.amount, e.target.value)}
+                                                required
+                                                maxLength={8}
                                             />
+                                            <Form.Control.Feedback type="invalid">{strings.MODAL_VALIDATION_INGREDIENT_UNIT}</Form.Control.Feedback>
                                         </Col>
                                         <Col xs={1}>
                                             <Button variant="outline-danger" size="sm" onClick={() => removeIngredient(index)}>
