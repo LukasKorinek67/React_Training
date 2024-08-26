@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 
 export default function RecipesSmallGrid({recipes, ingredients}) {
 
-    function getIngredientName(id) {
+    const getIngredientName = (id) => {
         const ingredient = ingredients.find(ingredient => ingredient.id === id);
         return ingredient.name;
     }

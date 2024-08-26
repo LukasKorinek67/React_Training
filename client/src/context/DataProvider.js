@@ -17,7 +17,7 @@ export function DataProvider({ children }) {
         getAllIngredients();
     }, []);
 
-    function getAllRecipes() {
+    const getAllRecipes = () => {
         requestHandler.getAllRecipes()
             .then(async (response) => {
                 if (response.status >= 400) {
@@ -28,7 +28,7 @@ export function DataProvider({ children }) {
             });
     }
 
-    function getAllIngredients() {
+    const getAllIngredients = () => {
         requestHandler.getAllIngredients()
             .then(async (response) => {
                 if (response.status >= 400) {

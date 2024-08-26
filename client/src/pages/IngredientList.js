@@ -20,11 +20,11 @@ export default function IngredientList() {
         }
     }, [searchBy, ingredientsLoadCall.data]);
 
-    function handleSearch(searchValue) {
+    const handleSearch = (searchValue) => {
         setSearchBy(searchValue);
     }
 
-    function showIngredients() {
+    const showIngredients = () => {
         if (ingredientsLoadCall.state === "success") {
             return <ListGroup className="m-5">
                 {

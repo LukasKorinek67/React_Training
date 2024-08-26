@@ -33,11 +33,11 @@ export default function RecipeList() {
         { name: 'Tabulka', value: 'table', icon: mdiTable },
     ];
 
-    function handleSearchChange(searchValue) {
+    const handleSearchChange = (searchValue) => {
         setSearchBy(searchValue);
     }
 
-    function showRecipes() {
+    const showRecipes = () => {
         if (recipesLoadCall.state === "success" && ingredientsLoadCall.state === "success") {
             switch(viewType) {
                 case "big-detail":
