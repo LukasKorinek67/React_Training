@@ -11,7 +11,6 @@ import * as strings from "../text/strings";
 import {useData} from "../context/DataProvider";
 import requestHandler from "../services/RequestHandler";
 import { v4 as uuidv4 } from 'uuid';
-import Editor from 'react-simple-wysiwyg';
 
 
 export default function CreateRecipeModal({show, handleClose}) {
@@ -111,11 +110,28 @@ export default function CreateRecipeModal({show, handleClose}) {
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>{strings.MODAL_PROCESS}</Form.Label>
-                            <Editor
+                            <Form.Control
+                                type="text"
+                                as="textarea"
+                                rows={5}
                                 value={recipeData.description}
-                                onChange={(e) => setRecipeField("description", e.target.value)}
                                 placeholder={strings.MODAL_PROCESS_PLACEHOLDER}
+                                onChange={(e) => setRecipeField("description", e.target.value)}
+                                required
+                                maxLength={10000}
                             />
+                            <Form.Control.Feedback type="invalid">{strings.MODAL_VALIDATION_PROCESS}</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>{strings.MODAL_IMAGE}</Form.Label>
+                            <Form.Control
+                                value={recipeData.imgUri}
+                                type="text"
+                                as="input"
+                                placeholder={strings.MODAL_IMAGE_PLACEHOLDER}
+                                onChange={(e) => setRecipeField("imgUri", e.target.value)}
+                            />
+                            <Form.Control.Feedback type="valid">{strings.MODAL_VALIDATION_OPTIONAL}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Container className="ms-0 ps-0">

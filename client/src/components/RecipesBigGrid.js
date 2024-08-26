@@ -16,7 +16,9 @@ export default function RecipesBigGrid({recipes}) {
                                 {recipe.name}
                             </Card.Title>
                             <Card.Body>
-                                <Card.Img variant="top" src={recipe.imgUri} alt={recipe.name} className="mb-3"/>
+                                {recipe.imgUri.trim() !== "" &&
+                                    <Card.Img variant="top" src={recipe.imgUri} alt={recipe.name} className="mb-3"/>
+                                }
                                 <Card.Text>{recipe.description}</Card.Text>
                             </Card.Body>
                         </Card>

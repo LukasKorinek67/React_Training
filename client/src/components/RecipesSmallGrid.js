@@ -21,7 +21,9 @@ export default function RecipesSmallGrid({recipes, ingredients}) {
                             {recipe.name}
                         </Card.Title>
                         <Card.Body>
-                            <Card.Img variant="top" src={recipe.imgUri} alt={recipe.name} className="mb-3"/>
+                            {recipe.imgUri.trim() !== "" &&
+                                <Card.Img variant="top" src={recipe.imgUri} alt={recipe.name} className="mb-3"/>
+                            }
                             <Card.Text className="small-grid">{recipe.description}</Card.Text>
                             <ul>
                                 {recipe.ingredients && recipe.ingredients.map((ingredient) => (
