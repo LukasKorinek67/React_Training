@@ -17,7 +17,7 @@ export default function RecipesTableList({recipes}) {
                     </thead>
                     <tbody>
                         {recipes && recipes.map((recipe, index) => (
-                            <tr key={recipe.id} class="align-middle">
+                            <tr key={recipe.id} className="align-middle">
                                 <td>{index + 1}</td>
                                 <td>{recipe.name}</td>
                                 <td>{recipe.description}</td>
