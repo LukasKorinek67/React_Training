@@ -1,8 +1,12 @@
 import Table from 'react-bootstrap/Table';
 import ModifyRecipeButtons from "./ModifyRecipeButtons";
 import * as strings from "../text/strings";
+import {useContext} from "react";
+import UserContext from "../context/UserProvider";
 
 export default function RecipesTableList({recipes}) {
+    const { isAuthorized } = useContext(UserContext);
+
     return (
         <>
             <div className="m-3">
@@ -12,7 +16,9 @@ export default function RecipesTableList({recipes}) {
                         <th>#</th>
                         <th>{strings.TABLE_NAME}</th>
                         <th>{strings.TABLE_DESCRIPTION}</th>
-                        <th>{strings.TABLE_ACTION}</th>
+                        {isAuthorized &&
+                            <th>{strings.TABLE_ACTION}</th>
+                        }
                     </tr>
                     </thead>
                     <tbody>
@@ -21,9 +27,11 @@ export default function RecipesTableList({recipes}) {
                                 <td>{index + 1}</td>
                                 <td>{recipe.name}</td>
                                 <td>{recipe.description}</td>
-                                <td >
-                                    <ModifyRecipeButtons recipe={recipe}/>
-                                </td>
+                                {isAuthorized &&
+                                    <td >
+                                        <ModifyRecipeButtons recipe={recipe}/>
+                                    </td>
+                                }
                             </tr>
                             ))}
                     </tbody>
