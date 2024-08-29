@@ -13,7 +13,7 @@ import requestHandler from "../services/RequestHandler";
 import { v4 as uuidv4 } from 'uuid';
 
 
-export default function RecipeModal({recipe, show, handleClose, onComplete}) {
+export default function RecipeModal({recipe, show, handleClose, onComplete, mockupRecipe}) {
     const defaultForm = {
         name: "",
         description: "",
@@ -26,7 +26,6 @@ export default function RecipeModal({recipe, show, handleClose, onComplete}) {
     const {ingredientsLoadCall} = useData();
 
     useEffect(() => {
-        console.log("Now!");
         if (recipe && ingredientsLoadCall.state === "success") {
             setRecipeData({
                 name: recipe.name,
@@ -56,6 +55,15 @@ export default function RecipeModal({recipe, show, handleClose, onComplete}) {
             return newData;
         });
     };
+
+    const mockupRecipeData = () => {
+        const newRecipe = mockupRecipe();
+        return setRecipeData({
+            name: newRecipe.name,
+            description: newRecipe.description,
+            imgUri: newRecipe.imgUri,
+        });
+    }
 
     const addIngredient = () => {
         const sortedData = ingredientsLoadCall.data.sort((a, b) => a.name.localeCompare(b.name));
@@ -213,6 +221,13 @@ export default function RecipeModal({recipe, show, handleClose, onComplete}) {
                             />
                             <Form.Control.Feedback type="valid">{strings.MODAL_VALIDATION_OPTIONAL}</Form.Control.Feedback>
                         </Form.Group>
+                        {mockupRecipe &&
+                            <div className="d-flex">
+                                <Button size="sm" variant="link" className="ms-auto mb-3 text-secondary" onClick={mockupRecipeData}>
+                                    {strings.MODAL_MOCKUP_BUTTON}
+                                </Button>
+                            </div>
+                        }
                         <Form.Group className="mb-3">
                             <Container className="ms-0 ps-0">
                                 { (ingredients.length > 0) &&

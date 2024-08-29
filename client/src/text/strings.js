@@ -27,6 +27,7 @@ export const MODAL_PROCESS = "Postup";
 export const MODAL_PROCESS_PLACEHOLDER = "Vložte postup přípravy receptu ...";
 export const MODAL_IMAGE = "Obrázek";
 export const MODAL_IMAGE_PLACEHOLDER = "Vložte url adresu obrázku receptu ...";
+export const MODAL_MOCKUP_BUTTON = "Náhodný recept (mockup)";
 export const MODAL_INGREDIENTS = "Ingredience";
 export const MODAL_INGREDIENTS_ADD = "Přidat ingredienci";
 export const MODAL_INGREDIENTS_AMOUNT = "Počet";
