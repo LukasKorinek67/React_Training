@@ -1,8 +1,9 @@
 import Card from "react-bootstrap/Card";
 import Icon from '@mdi/react';
-import { mdiFoodForkDrink } from '@mdi/js';
+import {mdiFoodForkDrink} from '@mdi/js';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import ModifyRecipeButtons from "./ModifyRecipeButtons";
 
 export default function RecipesSmallGrid({recipes, ingredients}) {
 
@@ -30,6 +31,7 @@ export default function RecipesSmallGrid({recipes, ingredients}) {
                                     <li key={ingredient.id + ingredient.amount}>{getIngredientName(ingredient.id)}</li>
                                 ))}
                             </ul>
+                            <ModifyRecipeButtons recipe={recipe}/>
                         </Card.Body>
                     </Card>
                 </Col>

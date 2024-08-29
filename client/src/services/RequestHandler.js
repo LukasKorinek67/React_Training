@@ -24,6 +24,24 @@ class RequestHandler {
             },
         });
     }
+
+    updateRecipe(recipe) {
+        const endPoint = "/recipe/update";
+        return axios.post(this.url + endPoint, recipe, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+    }
+
+    deleteRecipe(recipeId) {
+        const endPoint = "/recipe/delete";
+        return axios.post(this.url + endPoint, recipeId, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+    }
 }
 const requestHandler = new RequestHandler();
 export default requestHandler;

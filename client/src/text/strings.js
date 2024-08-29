@@ -4,10 +4,21 @@ export const INGREDIENTS = "Ingredience";
 export const RECIPES_LIST = "Seznam receptů";
 export const INGREDIENTS_LIST = "Seznam ingrediencí";
 export const SEARCH = "Hledat";
+export const EDIT = "Upravit";
+export const CREATE = "Vytvořit";
+export const DELETE = "Smazat";
+export const CANCEL = "Zrušit";
+export const YES = "Ano";
+export const NO = "Ne";
+export const OK = "OK";
 export const CREATE_RECIPE = "Vytvořit recept";
+export const EDIT_RECIPE = "Upravit recept";
 export const ERROR_LOAD_DATA = "Nepodařilo se načíst data ze serveru.";
 export const CAROUSEL_GO_TO_RECIPES = "Přejít na seznam receptů.";
 export const CAROUSEL_GO_TO_INGREDIENTS = "Přejít na seznam ingrediencí.";
+export const TABLE_NAME = "Název";
+export const TABLE_DESCRIPTION = "Popis";
+export const TABLE_ACTION = "Akce";
 
 // Create Recipe Modal
 export const MODAL_RECIPE_NAME = "Název receptu";
@@ -26,8 +37,14 @@ export const MODAL_VALIDATION_OPTIONAL = "Nepovinný údaj";
 export const MODAL_VALIDATION_INGREDIENT_NAME = "Je třeba vybrat název ingredience!";
 export const MODAL_VALIDATION_INGREDIENT_AMOUNT = "Povinný údaj! Větší než 0, menší než 1 000 000!";
 export const MODAL_VALIDATION_INGREDIENT_UNIT = "Jednotka je povinná!";
-export const MODAL_BUTTON_CREATE = "Vytvořit";
-export const MODAL_BUTTON_CANCEL = "Zrušit";
+
+// Delete Recipe Modal
+export const DELETE_MODAL_TITLE = "Smazání receptu";
+export const DELETE_MODAL_MESSAGE = "Opravdu chcete smazat tento recept?";
+
+// Error Recipe Modal
+export const ERROR_MODAL_TITLE = "Error";
+export const ERROR_MODAL_MESSAGE = "Bohužel se nepodařilo smazat recept.";
 
 // Footer
 export const FOOTER_TEXT_CREATED_BY = "Vytvořil";
