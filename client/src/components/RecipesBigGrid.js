@@ -4,11 +4,13 @@ import {mdiFoodForkDrink} from '@mdi/js';
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ModifyRecipeButtons from "./ModifyRecipeButtons";
+import Container from "react-bootstrap/Container";
 
 export default function RecipesBigGrid({recipes}) {
     return (
         <>
-            <Row className="g-4 m-1">
+            <Container fluid>
+            <Row className="g-4 m-1 ms-5" xs="auto" sm="auto">
                 {recipes && recipes.map((recipe) => (
                     <Col key={recipe.id}>
                         <Card className="recipe-card" border="info">
@@ -27,6 +29,7 @@ export default function RecipesBigGrid({recipes}) {
                     </Col>
                 ))}
             </Row>
+            </Container>
         </>
     );
 }
