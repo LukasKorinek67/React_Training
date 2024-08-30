@@ -4,6 +4,7 @@ import {mdiFoodForkDrink} from '@mdi/js';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ModifyRecipeButtons from "./ModifyRecipeButtons";
+import Container from "react-bootstrap/Container";
 
 export default function RecipesSmallGrid({recipes, ingredients}) {
 
@@ -13,29 +14,31 @@ export default function RecipesSmallGrid({recipes, ingredients}) {
     }
 
     return (
-        <Row className="g-4 m-1">
-            {recipes && recipes.map((recipe) => (
-                <Col key={recipe.id}>
-                    <Card className="recipe-card" border="info">
-                        <Card.Title>
-                            <Icon path={mdiFoodForkDrink} size={1.2} color="var(--bs-info)"/>
-                            {recipe.name}
-                        </Card.Title>
-                        <Card.Body>
-                            {recipe.imgUri.trim() !== "" &&
-                                <Card.Img variant="top" src={recipe.imgUri} alt={recipe.name} className="mb-3"/>
-                            }
-                            <Card.Text className="small-grid">{recipe.description}</Card.Text>
-                            <ul>
-                                {recipe.ingredients && recipe.ingredients.map((ingredient) => (
-                                    <li key={ingredient.id + ingredient.amount}>{getIngredientName(ingredient.id)}</li>
-                                ))}
-                            </ul>
-                            <ModifyRecipeButtons recipe={recipe}/>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            ))}
-        </Row>
+        <Container fluid>
+            <Row className="g-4 m-1 ms-5" xs="auto" sm="auto">
+                {recipes && recipes.map((recipe) => (
+                    <Col key={recipe.id}>
+                        <Card className="recipe-card" border="info">
+                            <Card.Title>
+                                <Icon path={mdiFoodForkDrink} size={1.2} color="var(--bs-info)"/>
+                                {recipe.name}
+                            </Card.Title>
+                            <Card.Body>
+                                {recipe.imgUri.trim() !== "" &&
+                                    <Card.Img variant="top" src={recipe.imgUri} alt={recipe.name} className="mb-3"/>
+                                }
+                                <Card.Text className="small-grid">{recipe.description}</Card.Text>
+                                <ul>
+                                    {recipe.ingredients && recipe.ingredients.map((ingredient) => (
+                                        <li key={ingredient.id + ingredient.amount}>{getIngredientName(ingredient.id)}</li>
+                                    ))}
+                                </ul>
+                                <ModifyRecipeButtons recipe={recipe}/>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                ))}
+            </Row>
+        </Container>
     );
 }
