@@ -3,7 +3,7 @@ import axios from "axios";
 class RequestHandler {
 
     constructor() {
-        this.url = "http://localhost:8000";
+        this.url = process.env.REACT_APP_BACKEND_URL;
     }
 
     getAllRecipes() {
