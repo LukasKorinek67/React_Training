@@ -33,7 +33,7 @@ export default function RecipeDetail() {
             .catch(error => {
                 console.log(error)
                 setRecipeLoadCall({ state: "error", error: error.response ? error.response.data.error : 'Unknown error' });
-            });;
+            });
     }, []);
 
     const getIngredientName = (id) => {
