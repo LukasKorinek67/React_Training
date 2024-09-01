@@ -16,6 +16,15 @@ class RequestHandler {
         return axios.get(this.url + endPoint);
     }
 
+    getRecipe(recipeId) {
+        const endPoint = "/recipe/get";
+        return axios.get(this.url + endPoint, {
+            params: {
+                id: recipeId
+            }
+        });
+    }
+
     addNewRecipe(recipe) {
         const endPoint = "/recipe/create";
         return axios.post(this.url + endPoint, recipe, {
