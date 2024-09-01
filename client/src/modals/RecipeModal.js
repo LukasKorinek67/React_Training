@@ -245,7 +245,7 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
                                 }
                                 {ingredients.map((ingredient, index) => (
                                     <Row key={ingredient.list_uuid} className="mb-1">
-                                        <Col xs={7} className="pe-0">
+                                        <Col xs={7} className="pe-0 ps-0 ps-sm-2">
                                             <Form.Select
                                                 value={ingredient.name}
                                                 onChange={(e) => updateIngredientName(index, e.target.value)}
@@ -260,7 +260,7 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
                                             </Form.Select>
                                             <Form.Control.Feedback type="invalid">{strings.MODAL_VALIDATION_INGREDIENT_NAME}</Form.Control.Feedback>
                                         </Col>
-                                        <Col xs={2} className="pe-0">
+                                        <Col xs={2} className="pe-0 ps-0 ps-sm-2">
                                             <Form.Control
                                                 type="number"
                                                 as="input"
@@ -272,7 +272,7 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
                                             />
                                             <Form.Control.Feedback type="invalid">{strings.MODAL_VALIDATION_INGREDIENT_AMOUNT}</Form.Control.Feedback>
                                         </Col>
-                                        <Col xs={2} className="pe-0">
+                                        <Col xs={2} className="pe-0 ps-0 ps-sm-2">
                                             <Form.Control
                                                 type="text"
                                                 as="input"
@@ -283,7 +283,7 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
                                             />
                                             <Form.Control.Feedback type="invalid">{strings.MODAL_VALIDATION_INGREDIENT_UNIT}</Form.Control.Feedback>
                                         </Col>
-                                        <Col xs={1}>
+                                        <Col xs={1} className="pe-0 ps-0 ps-sm-2">
                                             <Button variant="outline-danger" size="sm" onClick={() => removeIngredient(index)}>
                                                 <Icon size={1} path={mdiClose}/>
                                             </Button>

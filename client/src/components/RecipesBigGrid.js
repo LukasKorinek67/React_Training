@@ -17,7 +17,7 @@ export default function RecipesBigGrid({recipes}) {
     return (
         <>
             <Container fluid>
-            <Row className="g-4 m-1 ms-5" xs="auto" sm="auto">
+            <Row className="g-4 m-1 ms-sm-5" xs="auto" sm="auto">
                 {recipes && recipes.map((recipe) => (
                     <Col key={recipe.id}>
                         <Card className="recipe-card" border="info" onClick={(e) => handleCardClick(e, recipe.id)} role='button'>

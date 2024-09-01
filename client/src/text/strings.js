@@ -47,6 +47,10 @@ export const DELETE_MODAL_MESSAGE = "Opravdu chcete smazat tento recept?";
 export const ERROR_MODAL_TITLE = "Error";
 export const ERROR_MODAL_MESSAGE = "Bohužel se nepodařilo smazat recept.";
 
+// NotFoundPage
+export const NOT_FOUND_HEADER = "ERROR 404";
+export const NOT_FOUND_TEXT = "Na tomto odkaze nic není.";
+
 // Footer
 export const FOOTER_TEXT_CREATED_BY = "Vytvořil";
 export const FOOTER_TEXT_CREATOR = "Lukáš Kořínek";
