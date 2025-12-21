@@ -7,17 +7,18 @@ import {Button} from "react-bootstrap";
 import ConfirmationModal from "../modals/ConfirmationModal";
 import EditRecipeModal from "../modals/EditRecipeModal";
 import requestHandler from "../services/RequestHandler";
-import {useData} from "../context/DataProvider";
 import InformationModal from "../modals/InformationModal";
 import UserContext from "../context/UserProvider";
+import {useQueryClient} from "@tanstack/react-query";
+import {queryKeys} from "../queries/queryKeys";
 
 
 export default function ModifyRecipeButtons({recipe}) {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
-    const { reloadData } = useData();
     const { isAuthorized } = useContext(UserContext);
+    const queryClient = useQueryClient();
 
     const showEdit = () => setShowEditModal(true);
     const closeEdit = () => setShowEditModal(false);
@@ -25,6 +26,11 @@ export default function ModifyRecipeButtons({recipe}) {
     const closeDelete = () => setShowDeleteModal(false);
     const showError = () => setShowErrorModal(true);
     const closeError = () => setShowErrorModal(false);
+
+    const reloadData = () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.recipes });
+        queryClient.invalidateQueries({ queryKey: queryKeys.ingredients });
+    };
 
     const deleteRecipe = () => {
         const recipeId = {

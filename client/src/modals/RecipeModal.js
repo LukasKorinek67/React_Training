@@ -8,9 +8,10 @@ import Col from 'react-bootstrap/Col';
 import Icon from "@mdi/react";
 import {mdiPlus, mdiClose, mdiPencilOutline, mdiLoading} from "@mdi/js";
 import * as strings from "../text/strings";
-import {useData} from "../context/DataProvider";
 import requestHandler from "../services/RequestHandler";
 import { v4 as uuidv4 } from 'uuid';
+import {useQuery} from "@tanstack/react-query";
+import {getAllIngredientsQueryOptions} from "../queries/queryOptions";
 
 
 export default function RecipeModal({recipe, show, handleClose, onComplete, mockupRecipe}) {
@@ -23,10 +24,10 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
     const [ingredients, setIngredients] = useState([]);
     const [validated, setValidated] = useState(false);
     const [serverCall, setServerCall] = useState({ state: "inactive" })
-    const {ingredientsLoadCall} = useData();
+    const { data: ingredientsData } = useQuery(getAllIngredientsQueryOptions());
 
     useEffect(() => {
-        if (recipe && ingredientsLoadCall.state === "success") {
+        if (recipe && ingredientsData) {
             setRecipeData({
                 name: recipe.name,
                 description: recipe.description,
@@ -46,7 +47,7 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
             setRecipeData(defaultForm);
             setIngredients([]);
         }
-    }, [recipe, ingredientsLoadCall.state]);
+    }, [recipe, ingredientsData]);
 
     const setRecipeField = (fieldName, fieldValue) => {
         return setRecipeData((formData) => {
@@ -66,7 +67,7 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
     }
 
     const addIngredient = () => {
-        const sortedData = ingredientsLoadCall.data.sort((a, b) => a.name.localeCompare(b.name));
+        const sortedData = ingredientsData.sort((a, b) => a.name.localeCompare(b.name));
         setIngredients([...ingredients, {
             list_uuid: uuidv4(),
             id: sortedData[ingredients.length].id,
@@ -87,7 +88,7 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
     }
 
     const getIdByName = (name) => {
-        const ingredient = ingredientsLoadCall.data.find(ingredient => ingredient.name === name);
+        const ingredient = ingredientsData.find(ingredient => ingredient.name === name);
         if (ingredient !== undefined) {
             return ingredient.id;
         }
@@ -95,7 +96,7 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
     }
 
     const getNameById = (id) => {
-        const ingredient = ingredientsLoadCall.data.find(ingredient => ingredient.id === id);
+        const ingredient = ingredientsData.find(ingredient => ingredient.id === id);
         if (ingredient !== undefined) {
             return ingredient.name;
         }
@@ -251,8 +252,8 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
                                                 onChange={(e) => updateIngredientName(index, e.target.value)}
                                                 required
                                             >
-                                                {ingredientsLoadCall.state === "success" &&
-                                                    ingredientsLoadCall.data
+                                                {ingredientsData &&
+                                                    ingredientsData
                                                         .sort((a, b) => a.name.localeCompare(b.name))
                                                         .map((ingredient) => (
                                                             <option key={ingredient.id}>{ingredient.name}</option>

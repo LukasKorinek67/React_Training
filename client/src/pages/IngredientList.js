@@ -4,52 +4,62 @@ import Icon from "@mdi/react";
 import {mdiFoodVariant, mdiLoading} from "@mdi/js";
 import ListGroup from 'react-bootstrap/ListGroup';
 import * as strings from "../text/strings";
-import {useData} from "../context/DataProvider";
+import {useQuery} from "@tanstack/react-query";
+import {getAllIngredientsQueryOptions} from "../queries/queryOptions";
 
 
 export default function IngredientList() {
     const [searchBy, setSearchBy] = useState("");
-    const { ingredientsLoadCall } = useData();
+    const {
+        data: ingredients,
+        isLoading: isIngredientsLoading,
+        isError: isIngredientsError,
+        error: ingredientsError,
+    } = useQuery(getAllIngredientsQueryOptions());
 
 
     const filteredIngredients = useMemo(() => {
-        if (ingredientsLoadCall.data != null) {
-            return ingredientsLoadCall.data.filter((ingredient) => {
-                return (ingredient.name.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase()));
-            });
-        }
-    }, [searchBy, ingredientsLoadCall.data]);
+        if (!ingredients) return [];
+        return ingredients.filter((ingredient) => {
+            return (ingredient.name.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase()));
+        });
+    }, [ingredients, searchBy]);
 
     const handleSearch = (searchValue) => {
         setSearchBy(searchValue);
     }
 
     const showIngredients = () => {
-        if (ingredientsLoadCall.state === "success") {
-            return <ListGroup className="m-5">
-                {
-                    filteredIngredients.map((ingredient) => (
-                        <ListGroup.Item key={ingredient.id}>
-                            <Icon size={1} path={mdiFoodVariant} color="var(--bs-info)" className="me-2"/>
-                            {ingredient.name}
-                        </ListGroup.Item>
-                    ))
-                }
-            </ListGroup>;
-        } else if (ingredientsLoadCall.state === "error") {
-            return (
-                <div className="request_error">
-                    <h1>{strings.ERROR_LOAD_DATA}</h1>
-                    <pre>{JSON.stringify(ingredientsLoadCall.error, null, 2)}</pre>
-                </div>
-            );
-        } else {
+        if(isIngredientsLoading) {
             return (
                 <div className="loading_icon">
                     <Icon size={2} path={mdiLoading} spin={true} />
                 </div>
             );
         }
+
+        if(isIngredientsError) {
+            const printableError = ingredientsError instanceof Error
+                ? { name: ingredientsError.name, message: ingredientsError.message, stack: ingredientsError.stack }
+                : ingredientsError;
+            return (
+                <div className="request_error">
+                    <h1>{strings.ERROR_LOAD_DATA}</h1>
+                    <pre>{JSON.stringify(printableError, null, 2)}</pre>
+                </div>
+            );
+        }
+
+        return <ListGroup className="m-5">
+            {
+                filteredIngredients.map((ingredient) => (
+                    <ListGroup.Item key={ingredient.id}>
+                        <Icon size={1} path={mdiFoodVariant} color="var(--bs-info)" className="me-2"/>
+                        {ingredient.name}
+                    </ListGroup.Item>
+                ))
+            }
+        </ListGroup>;
     }
 
     return (

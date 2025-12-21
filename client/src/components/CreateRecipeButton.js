@@ -4,17 +4,23 @@ import {mdiPlus} from "@mdi/js";
 import * as strings from "../text/strings";
 import {Button} from "react-bootstrap";
 import CreateRecipeModal from "../modals/CreateRecipeModal";
-import {useData} from "../context/DataProvider";
+import { useQueryClient } from '@tanstack/react-query';
 import UserContext from "../context/UserProvider";
+import {queryKeys} from "../queries/queryKeys";
 
 
 export default function CreateRecipeButton() {
     const [showModal, setShowModal] = useState(false);
-    const { reloadData } = useData();
     const { isAuthorized } = useContext(UserContext);
+    const queryClient = useQueryClient();
 
     const show = () => setShowModal(true);
     const close = () => setShowModal(false);
+
+    const reloadData = () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.recipes });
+        queryClient.invalidateQueries({ queryKey: queryKeys.ingredients });
+    };
 
     return (
         <>
