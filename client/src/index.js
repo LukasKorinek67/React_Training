@@ -10,6 +10,8 @@ import RecipeDetail from "./pages/RecipeDetail";
 import IngredientList from "./pages/IngredientList";
 import NotFoundPage from "./pages/NotFoundPage";
 import Home from "./pages/Home";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 
 const router = createBrowserRouter([
@@ -24,11 +26,15 @@ const router = createBrowserRouter([
     }
 ])
 
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
   </React.StrictMode>
 );
 
