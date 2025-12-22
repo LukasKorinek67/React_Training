@@ -6,11 +6,11 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import {Button} from "react-bootstrap";
 import ConfirmationModal from "../modals/ConfirmationModal";
 import EditRecipeModal from "../modals/EditRecipeModal";
-import requestHandler from "../services/RequestHandler";
 import InformationModal from "../modals/InformationModal";
 import UserContext from "../context/UserProvider";
-import {useQueryClient} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {queryKeys} from "../queries/queryKeys";
+import {deleteRecipe} from "../api/recipesRequests";
 
 
 export default function ModifyRecipeButtons({recipe}) {
@@ -19,6 +19,17 @@ export default function ModifyRecipeButtons({recipe}) {
     const [showErrorModal, setShowErrorModal] = useState(false);
     const { isAuthorized } = useContext(UserContext);
     const queryClient = useQueryClient();
+    const { mutate } = useMutation({
+        mutationFn: (recipeId) => deleteRecipe(recipeId),
+        onSuccess: () => {
+            reloadData();
+            setShowDeleteModal(false);
+        },
+        onError: () => {
+            setShowDeleteModal(false);
+            showError();
+        },
+    })
 
     const showEdit = () => setShowEditModal(true);
     const closeEdit = () => setShowEditModal(false);
@@ -32,23 +43,11 @@ export default function ModifyRecipeButtons({recipe}) {
         queryClient.invalidateQueries({ queryKey: queryKeys.ingredients });
     };
 
-    const deleteRecipe = () => {
+    const handleDeleteRecipe = () => {
         const recipeId = {
             "id": recipe.id
         };
-        requestHandler.deleteRecipe(recipeId)
-            .then(async (response) => {
-                console.log(response)
-                if (response.status >= 400) {
-                    //error
-                    setShowDeleteModal(false);
-                    showError();
-                } else {
-                    //success
-                    reloadData();
-                    setShowDeleteModal(false);
-                }
-            });
+        mutate(recipeId);
     }
 
     return (
@@ -74,7 +73,7 @@ export default function ModifyRecipeButtons({recipe}) {
                     <ConfirmationModal
                         show={showDeleteModal}
                         handleClose={closeDelete}
-                        onConfirm={deleteRecipe}
+                        onConfirm={handleDeleteRecipe}
                         title={strings.DELETE_MODAL_TITLE}
                         message={strings.DELETE_MODAL_MESSAGE}
                     />

@@ -1,4 +1,4 @@
-//import axios from "axios";
+import axios from "axios";
 
 export const fetchRecipes = async () => {
     //await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -23,4 +23,34 @@ export const fetchRecipe = async ({ queryKey }) => {
     };
     const response = await axios.get(url, params);
     return response.data;*/
+}
+
+export const addNewRecipe = async (recipe) => {
+    const endPoint = "/recipe/create";
+    const url = `${process.env.REACT_APP_BACKEND_URL}${endPoint}`;
+    return axios.post(url, recipe, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+}
+
+export const updateRecipe = async (recipe) => {
+    const endPoint = "/recipe/update";
+    const url = `${process.env.REACT_APP_BACKEND_URL}${endPoint}`;
+    return axios.post(url, recipe, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+}
+
+export const deleteRecipe = async (recipeId) => {
+    const endPoint = "/recipe/delete";
+    const url = `${process.env.REACT_APP_BACKEND_URL}${endPoint}`;
+    return axios.post(url, recipeId, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
 }

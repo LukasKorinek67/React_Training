@@ -8,10 +8,10 @@ import Col from 'react-bootstrap/Col';
 import Icon from "@mdi/react";
 import {mdiPlus, mdiClose, mdiPencilOutline, mdiLoading} from "@mdi/js";
 import * as strings from "../text/strings";
-import requestHandler from "../services/RequestHandler";
 import { v4 as uuidv4 } from 'uuid';
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import {getAllIngredientsQueryOptions} from "../queries/queryOptions";
+import {addNewRecipe, updateRecipe} from "../api/recipesRequests";
 
 
 export default function RecipeModal({recipe, show, handleClose, onComplete, mockupRecipe}) {
@@ -23,8 +23,23 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
     const [recipeData, setRecipeData] = useState(defaultForm);
     const [ingredients, setIngredients] = useState([]);
     const [validated, setValidated] = useState(false);
-    const [serverCall, setServerCall] = useState({ state: "inactive" })
     const { data: ingredientsData } = useQuery(getAllIngredientsQueryOptions());
+    const addMutation = useMutation({
+        mutationFn: (recipe) => addNewRecipe(recipe),
+        onSuccess: () => {
+            onComplete();
+            handleClose();
+            resetModal();
+        }
+    })
+    const editMutation = useMutation({
+        mutationFn: (recipe) => updateRecipe(recipe),
+        onSuccess: () => {
+            onComplete();
+            handleClose();
+            resetModal()
+        }
+    })
 
     useEffect(() => {
         if (recipe && ingredientsData) {
@@ -67,11 +82,11 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
     }
 
     const addIngredient = () => {
-        const sortedData = ingredientsData.sort((a, b) => a.name.localeCompare(b.name));
+        if (!ingredientsData?.length) return;
         setIngredients([...ingredients, {
             list_uuid: uuidv4(),
-            id: sortedData[ingredients.length].id,
-            name: sortedData[ingredients.length].name,
+            id: ingredientsData[ingredients.length].id,
+            name: ingredientsData[ingredients.length].name,
             amount: null,
             unit: '' }]);
     };
@@ -88,7 +103,7 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
     }
 
     const getIdByName = (name) => {
-        const ingredient = ingredientsData.find(ingredient => ingredient.name === name);
+        const ingredient = ingredientsData?.find(ingredient => ingredient.name === name);
         if (ingredient !== undefined) {
             return ingredient.id;
         }
@@ -96,7 +111,7 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
     }
 
     const getNameById = (id) => {
-        const ingredient = ingredientsData.find(ingredient => ingredient.id === id);
+        const ingredient = ingredientsData?.find(ingredient => ingredient.id === id);
         if (ingredient !== undefined) {
             return ingredient.name;
         }
@@ -134,46 +149,27 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
             return;
         }
 
-        setServerCall({ state: "pending" });
-
         if(recipe) {
             //update
             recipePayLoad = {
                 ...recipePayLoad,
                 "id": recipe.id
             }
-            requestHandler.updateRecipe(recipePayLoad)
-                .then(async (response) => {
-                    console.log(response)
-                    if (response.status >= 400) {
-                        //error
-                        setServerCall({state: "error", error: response.data});
-                    } else {
-                        //success
-                        setServerCall({state: "success", data: response.data});
-                        onComplete();
-                        handleClose();
-                        resetModal()
-                    }
-                });
+            editMutation.mutate(recipePayLoad)
         } else {
             //create
-            requestHandler.addNewRecipe(recipePayLoad)
-                .then(async (response) => {
-                    console.log(response)
-                    if (response.status >= 400) {
-                        //error
-                        setServerCall({state: "error", error: response.data});
-                    } else {
-                        //success
-                        setServerCall({state: "success", data: response.data});
-                        onComplete();
-                        handleClose();
-                        resetModal()
-                    }
-                });
+            addMutation.mutate(recipePayLoad);
         }
     };
+
+    const getErrorMessage = () => {
+        if(!addMutation.isError && !editMutation.isError) {
+            return null;
+        }
+        const error = addMutation.isError ?
+            addMutation.error : editMutation.error;
+        return error.message;
+    }
 
     return (
         <>
@@ -254,7 +250,6 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
                                             >
                                                 {ingredientsData &&
                                                     ingredientsData
-                                                        .sort((a, b) => a.name.localeCompare(b.name))
                                                         .map((ingredient) => (
                                                             <option key={ingredient.id}>{ingredient.name}</option>
                                                         ))}
@@ -297,8 +292,8 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
                                 {strings.MODAL_INGREDIENTS_ADD}
                             </Button>
                         </Form.Group>
-                        { serverCall.state === "error" &&
-                            <Form.Text className="text-center text-danger fw-semibold">Error: {serverCall.error.errorMessage}</Form.Text>
+                        { (addMutation.isError || editMutation.isError) &&
+                            <Form.Text className="text-center text-danger fw-semibold">Error: {getErrorMessage()}</Form.Text>
                         }
                     </Modal.Body>
                     <Modal.Footer>
@@ -306,8 +301,8 @@ export default function RecipeModal({recipe, show, handleClose, onComplete, mock
                             <Icon size={0.8} path={mdiClose} className="me-1 pb-1"/>
                             {strings.CANCEL}
                         </Button>
-                        <Button variant="outline-info" type="submit" disabled={serverCall.state === "pending"}>
-                            { serverCall.state === "pending" ?
+                        <Button variant="outline-info" type="submit" disabled={(addMutation.isPending || editMutation.isPending)}>
+                            { (addMutation.isPending || editMutation.isPending) ?
                                 (<Icon size={0.8} path={mdiLoading} spin={true} className="me-1 pb-1" />) :
                                 (<Icon size={0.8} path={recipe ? mdiPencilOutline : mdiPlus} className="me-1 pb-1" />)
                             }

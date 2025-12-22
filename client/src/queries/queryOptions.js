@@ -21,6 +21,9 @@ export const getRecipeDetailQueryOptions = (id) => {
 export const getAllIngredientsQueryOptions = () => {
     return queryOptions({
         queryKey: queryKeys.ingredients,
-        queryFn: fetchIngredients
+        queryFn: fetchIngredients,
+        select: (data) => {
+            return data.sort((a, b) => a.name.localeCompare(b.name))
+        }
     })
 }
